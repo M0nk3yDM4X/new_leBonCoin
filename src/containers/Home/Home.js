@@ -8,9 +8,17 @@ import ProductList from "../../components/Home-Components/ProductList.js";
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [products, setProducts] = useState([]);
-  const [pageNumber, setPageNumber] = useState();
+
+  // Liste de produits
+  const [products, setProducts] = useState({});
+
+  // Nombre de produits
+  const [page, setPage] = useState();
+
+  // Compteur
   const [counter, setCounter] = useState(0);
+
+  // Filtres
   const [title, setTitle] = useState("");
   const [priceMin, setPriceMin] = useState(0);
   const [priceMax, setPriceMax] = useState(0);
@@ -20,40 +28,41 @@ const Home = () => {
   const arraySelected = [];
 
   for (let i = 0; i < sortArray.length; i++) {
-    arraySelected.push(<option value={sortArray[i]}> {sortArray[i]}</option>);
+    arraySelected.push(
+      <option key={sortArray[i]} value={sortArray[i]}>
+        {sortArray[i]}
+      </option>
+    );
   }
 
-  // HELLO WORLD
+  const array = [];
+  let limit = 10;
+  for (let i = 0; i < page / limit; i++) {
+    array.push(i + 1);
+  }
 
-  // const array = [];
-  // let limit = 10;
-  // for (let i = 0; i < pageNumber / limit; i++) {
-  //   array.push(i + 1);
-  // }
-
-  let link = url.url + "/offer/with-count";
-
-  // + counter + "&limit=" + limit;
+  let link = url.url + "/offers/?" + counter + "&limit=" + limit;
 
   if (title && title.length > 0) {
-    url = url + "&title=" + title;
+    link = link + "&title=" + title;
   }
   if (priceMin > 0) {
-    url = url + "&priceMin=" + priceMin;
+    link = link + "&priceMin=" + priceMin;
   }
   if (priceMax > 0) {
-    url = url + "&priceMax=" + priceMax;
+    link = link + "&priceMax=" + priceMax;
   }
 
   if (sort) {
-    url = url + "&sort=" + sort;
+    link = link + "&sort=" + sort;
   }
 
   const fetchData = async () => {
     try {
       const response = await axios.get(link);
+      console.log(response.data);
       setProducts(response.data.offers);
-      setPageNumber(response.data.count);
+      setPage(response.data.count);
       setIsLoading(false);
     } catch (error) {
       console.log("vous êtes nul");
@@ -83,7 +92,7 @@ const Home = () => {
       ) : (
         <>
           <ProductList products={products} />
-          {/* <div className="wrapper-buttons">
+          <div className="wrapper-buttons">
             <div className="buttons">
               <button
                 className="buttons-css"
@@ -113,16 +122,15 @@ const Home = () => {
               <button
                 className="buttons-css"
                 onClick={() => {
-                  if (counter < pageNumber - limit) {
+                  if (counter < page - limit) {
                     setCounter(counter + limit);
-                    console.log(counter);
                   }
                 }}
               >
                 ⇥
               </button>
             </div>
-          </div> */}
+          </div>
         </>
       )}
     </div>

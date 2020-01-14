@@ -14,7 +14,7 @@ const Offer = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(url.url + "/offer/?id=" + id);
+      const response = await axios.get(url.url + "/offer/" + id);
       setOffer(response.data);
       setIsLoading(false);
     } catch (error) {

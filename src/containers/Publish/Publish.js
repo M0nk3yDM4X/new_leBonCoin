@@ -36,13 +36,17 @@ const Publish = props => {
     data.append("price", price);
     data.append("files", file);
 
-    try {
-      const response = await axios.post(url.url + "/offer/publish", data, {
-        headers: { Authorization: "Bearer " + props.token }
-      });
-      history.push("/");
-    } catch (error) {
-      alert(error.message);
+    if (props.token) {
+      try {
+        const response = await axios.post(url.url + "/offer/publish", data, {
+          headers: { Authorization: "Bearer " + props.token }
+        });
+        history.push("/");
+      } catch (error) {
+        alert(error.message);
+      }
+    } else {
+      alert("Vous devez être connecté pour pouvoir publier une annonce");
     }
   };
 
