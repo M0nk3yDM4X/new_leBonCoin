@@ -44,9 +44,15 @@ const App = () => {
   };
 
   const logIn = object => {
-    Cookies.set("token", object.token);
-    Cookies.set("user", object.account.username);
-    setUser(object.account.username);
+    if (object.token) {
+      Cookies.set("token", object.token);
+      Cookies.set("user", object.account.username);
+      setUser(object.account.username);
+    } else if (object.error === "User not found") {
+      alert("utilisateur non répertorié");
+    } else {
+      alert("Mauvais mot de passe");
+    }
   };
 
   const logOut = () => {

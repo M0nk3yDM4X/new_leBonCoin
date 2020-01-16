@@ -12,11 +12,11 @@ const Home = () => {
   // Liste de produits
   const [products, setProducts] = useState({});
 
-  // Nombre de produits
-  const [page, setPage] = useState();
+  // Nombre de produits --> longueur du tableau de la data réceptionnée
+  const [dataLength, setDataLength] = useState(0);
 
   // Compteur
-  const [counter, setCounter] = useState(0);
+  const [page, setPage] = useState(1);
 
   // Filtres
   const [title, setTitle] = useState("");
@@ -35,13 +35,16 @@ const Home = () => {
     );
   }
 
-  const array = [];
-  let limit = 10;
-  for (let i = 0; i < page / limit; i++) {
-    array.push(i + 1);
+  const numberOfPages = [];
+  let limit = 3;
+  for (let i = 0; i < dataLength / limit; i++) {
+    numberOfPages.push(i + 1);
   }
 
-  let link = url.url + "/offers/?" + counter + "&limit=" + limit;
+  // console.log(pageNumbers);
+  // console.log(dataLength);
+
+  let link = url.url + "/offers" + "?page=" + page;
 
   if (title && title.length > 0) {
     link = link + "&title=" + title;
@@ -52,7 +55,6 @@ const Home = () => {
   if (priceMax > 0) {
     link = link + "&priceMax=" + priceMax;
   }
-
   if (sort) {
     link = link + "&sort=" + sort;
   }
@@ -60,9 +62,8 @@ const Home = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get(link);
-      console.log(response.data);
       setProducts(response.data.offers);
-      setPage(response.data.count);
+      setDataLength(response.data.count);
       setIsLoading(false);
     } catch (error) {
       console.log("vous êtes nul");
@@ -71,7 +72,10 @@ const Home = () => {
 
   useEffect(() => {
     fetchData();
-  }, [counter]);
+  }, [page]);
+  useEffect(() => {
+    console.log(products);
+  }, [products]);
 
   return (
     <div className="homepage">
@@ -97,21 +101,23 @@ const Home = () => {
               <button
                 className="buttons-css"
                 onClick={() => {
-                  if (counter > 0) {
-                    setCounter(counter - limit);
+                  if (page > 1) {
+                    setPage(page - 1);
                   }
                 }}
               >
                 ⇤
               </button>
 
-              {array.map((number, index) => {
+              {numberOfPages.map((number, index) => {
+                // console.log(number, index);
+
                 return (
                   <button
                     className="buttons-css"
                     key={index}
                     onClick={() => {
-                      setCounter(number * limit - limit);
+                      setPage(number);
                     }}
                   >
                     {number}
@@ -122,8 +128,13 @@ const Home = () => {
               <button
                 className="buttons-css"
                 onClick={() => {
-                  if (counter < page - limit) {
-                    setCounter(counter + limit);
+                  console.log("ceci est le numéro de page >>>", page);
+                  console.log(
+                    "ceci est la limite du nombre de pages >>> ",
+                    dataLength - limit
+                  );
+                  if (page < dataLength - limit - 1) {
+                    setPage(page + 1);
                   }
                 }}
               >
