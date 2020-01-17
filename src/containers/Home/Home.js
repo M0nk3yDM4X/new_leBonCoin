@@ -24,7 +24,12 @@ const Home = () => {
   const [priceMax, setPriceMax] = useState(0);
   const [sort, setSort] = useState("");
 
-  const sortArray = ["price-desc", "price-asc", "date-desc", "date-asc"];
+  const sortArray = [
+    "prix-décroissant",
+    "prix-croissant",
+    "date-décroissant",
+    "date-croissant"
+  ];
   const arraySelected = [];
 
   for (let i = 0; i < sortArray.length; i++) {
@@ -40,9 +45,6 @@ const Home = () => {
   for (let i = 0; i < dataLength / limit; i++) {
     numberOfPages.push(i + 1);
   }
-
-  // console.log(pageNumbers);
-  // console.log(dataLength);
 
   let link = url.url + "/offers" + "?page=" + page;
 
@@ -70,12 +72,21 @@ const Home = () => {
     }
   };
 
+  const prevPage = () => {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  };
+
+  const nextPage = () => {
+    if (page < dataLength - limit) {
+      setPage(page + 1);
+    }
+  };
+
   useEffect(() => {
     fetchData();
   }, [page]);
-  useEffect(() => {
-    console.log(products);
-  }, [products]);
 
   return (
     <div className="homepage">
@@ -98,46 +109,27 @@ const Home = () => {
           <ProductList products={products} />
           <div className="wrapper-buttons">
             <div className="buttons">
-              <button
-                className="buttons-css"
-                onClick={() => {
-                  if (page > 1) {
-                    setPage(page - 1);
-                  }
-                }}
-              >
+              <button className="buttons-css" onClick={prevPage}>
                 ⇤
               </button>
 
               {numberOfPages.map((number, index) => {
-                // console.log(number, index);
+                const actualPage = () => {
+                  setPage(number);
+                };
 
                 return (
                   <button
                     className="buttons-css"
                     key={index}
-                    onClick={() => {
-                      setPage(number);
-                    }}
+                    onClick={actualPage}
                   >
                     {number}
                   </button>
                 );
               })}
 
-              <button
-                className="buttons-css"
-                onClick={() => {
-                  console.log("ceci est le numéro de page >>>", page);
-                  console.log(
-                    "ceci est la limite du nombre de pages >>> ",
-                    dataLength - limit
-                  );
-                  if (page < dataLength - limit - 1) {
-                    setPage(page + 1);
-                  }
-                }}
-              >
+              <button className="buttons-css" onClick={nextPage}>
                 ⇥
               </button>
             </div>

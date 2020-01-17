@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import format from "date-fns/format";
 
 const ProductList = props => {
+  const products = props.products;
+  const length = products.length;
   return (
-    <section className="product-list">
+    <section className={length < 3 ? "productListUnfill" : "product-list"}>
       <div className="wrapper-products">
         {props.products.map((product, index) => {
           const result = format(new Date(product.created), "Pp");

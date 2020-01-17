@@ -28,6 +28,7 @@ const Hero = props => {
           />
 
           <input
+            className="filters"
             type="number"
             placeholder="tri par prix minimum"
             value={props.priceMin}
@@ -37,6 +38,7 @@ const Hero = props => {
           />
 
           <input
+            className="filters"
             type="number"
             placeholder="tri par prix maximum"
             value={props.priceMax}
