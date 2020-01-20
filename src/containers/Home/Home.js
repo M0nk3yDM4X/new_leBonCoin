@@ -79,7 +79,7 @@ const Home = () => {
   };
 
   const nextPage = () => {
-    if (page < dataLength - limit) {
+    if (page <= dataLength - limit) {
       setPage(page + 1);
     }
   };
